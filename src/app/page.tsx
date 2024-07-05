@@ -147,10 +147,12 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-4 bg-gray-900">
-      <div className="w-full max-w-md flex flex-col items-start p-4 bg-gray-200 dark:bg-zinc-800 rounded-lg shadow-lg mb-4">
+      <div className="w-full max-w-fit flex flex-col items-start p-4 bg-gray-200 dark:bg-zinc-800 rounded-lg shadow-lg mb-4">
+        <TitleSection />
+        <BannerSection />
         <div className="content relative">
-        <video autoPlay playsInline muted ref={videoRef} className="relative w-full h-[100vh] rounded-md object-cover max-w-[640px] max-h-[640px]" id="frame" />
-          <canvas className="absolute top-0 left-0 w-full h-[100vh] z-99999 max-w-[640px] max-h-[640px]" ref={canvasRef}></canvas>
+          <video autoPlay playsInline muted ref={videoRef} className="relative w-full h-full rounded-md object-cover max-w-[640px] max-h-[640px]" id="frame" />
+          <canvas className="absolute top-0 left-0 w-full h-full z-99999 max-w-[640px] max-h-[640px]" ref={canvasRef}></canvas>
         </div>
       </div>
     </main>
