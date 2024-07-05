@@ -61,7 +61,7 @@ export default function Home() {
     const classDetect = detections.map(det => det.klass);
     const keypoints = detections.map(det => det.keypoints);
 
-    renderBoxes(canvasRef, threshold, boxes, scores, classDetect, keypoints);
+    renderBoxes(canvasRef, threshold, boxes, scores, classDetect, keypoints, modelDim[0], modelDim[1], videoElement.videoWidth, videoElement.videoHeight);
 
     requestAnimationFrame(() => detectFrame(session));
   };

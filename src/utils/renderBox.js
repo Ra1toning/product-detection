@@ -56,7 +56,7 @@ function drawSparkles(ctx, cx, cy, count, radius) {
   }
 }
 
-export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, classes_data, keypoints_data) {
+export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, classes_data, keypoints_data, modelWidth, modelHeight, videoWidth, videoHeight) {
   if (!canvasRef || !canvasRef.current) {
     return;
   }
@@ -69,6 +69,15 @@ export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, class
 
   const canvasWidth = ctx.canvas.width;
   const canvasHeight = ctx.canvas.height;
+
+  // Calculate scale factors
+  const scaleX = canvasWidth / modelWidth;
+  const scaleY = canvasHeight / modelHeight;
+  const scale = Math.min(scaleX, scaleY);
+
+  // Calculate padding
+  const padX = (canvasWidth - modelWidth * scale) / 2;
+  const padY = (canvasHeight - modelHeight) / 2;
 
   const starOuterRadius = 10;
   const starInnerRadius = 5;
@@ -88,7 +97,13 @@ export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, class
           score = score / 100;
         }
 
-        let [x1, y1, x2, y2] = normalizeCoordinates(boxes_data[i], canvasWidth, canvasHeight);
+        let [x1, y1, x2, y2] = normalizeCoordinates(boxes_data[i], modelWidth, modelHeight);
+
+        // Scale and adjust for padding
+        x1 = x1 * scale + padX;
+        y1 = y1 + padY;
+        x2 = x2 * scale + padX;
+        y2 = y2 + padY;
 
         const width = x2 - x1;
         const height = y2 - y1;
@@ -122,8 +137,8 @@ export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, class
         const keypoints = keypoints_data[i];
         ctx.fillStyle = 'blue';
         for (let j = 0; j < keypoints.length; j += 3) {
-          const keypointX = keypoints[j];
-          const keypointY = keypoints[j + 1];
+          const keypointX = keypoints[j] * scale + padX;
+          const keypointY = keypoints[j + 1] + padY;
           const keypointConfidence = keypoints[j + 2];
           
           if (keypointConfidence > 0.5) { 
