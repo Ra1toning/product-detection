@@ -1,0 +1,41 @@
+<svg width="1200" height="200" viewBox="0 0 1200 350" xmlns="http://www.w3.org/2000/svg">
+  <!-- 'M' Text -->
+  <text x="50" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#0072ce">M</text>
+
+  <!-- 'I' Text -->
+  <text x="180" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#00a7e0">I</text>
+
+  <!-- 'L' Text -->
+  <text x="215" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#00a7e0">L</text>
+
+  <!-- 'K' Text -->
+  <text x="290" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#00a7e0">K</text>
+
+  <!-- 'D' Text -->
+  <text x="400" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#0072ce">D</text>
+
+  <!-- 'E' Text -->
+  <text x="500" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#00a7e0">E</text>
+
+  <!-- 'T' Text -->
+  <text x="580" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#00a7e0">T</text>
+
+  <!-- 'E' Text -->
+  <text x="660" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#00a7e0">E</text>
+
+  <!-- 'C' Text -->
+  <text x="740" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#00a7e0">C</text>
+
+  <!-- 'T' Text -->
+  <text x="830" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#00a7e0">T</text>
+
+  <!-- 'I' Text with dot -->
+  <text x="910" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#00a7e0">I</text>
+  <circle cx="1450" cy="110" r="10" fill="white" stroke="none"/>
+
+  <!-- 'O' Text -->
+  <text x="950" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#00a7e0">O</text>
+
+  <!-- 'N' Text -->
+  <text x="1060" y="200" font-family="Arial, sans-serif" font-size="150" font-weight="bold" fill="#00a7e0">N</text>
+</svg>
