@@ -6,6 +6,7 @@ import { non_max_suppression } from "@/utils/nonMaxSuppression";
 import { renderBoxes } from "@/utils/renderBox";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, Battery, Wifi, Settings, Camera  } from "lucide-react";
+import BannerSection from "@/components/ui/BannerSection";
 
 export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -175,7 +176,7 @@ export default function Home() {
 
         {/* Logo */}
         <h1 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">FU24</h1>
-
+        <BannerSection />
         {/* Video Feed */}
         <div className="relative  mb-6 rounded-2xl overflow-hidden
                         border-4 border-opacity-50 border-white shadow-inner">
