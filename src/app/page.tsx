@@ -5,7 +5,7 @@ import { Webcam } from "@/utils/webcam";
 import { non_max_suppression } from "@/utils/nonMaxSuppression";
 import { renderBoxes } from "@/utils/renderBox";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Battery, Wifi, Settings } from "lucide-react";
+import { Moon, Sun, Battery, Wifi, Settings, Camera  } from "lucide-react";
 
 export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -161,65 +161,61 @@ export default function Home() {
   console.warn = () => {};
 
   return (
-    <main className={`flex min-h-screen flex-col items-center justify-center p-4 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      <div className={`w-full max-w-fit flex flex-col items-center p-4 rounded-3xl shadow-lg overflow-hidden
+    <main className={`flex min-h-screen flex-col items-center justify-center p-4 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}>
+      <div className={`w-full max-w-fit flex flex-col items-center p-6 rounded-3xl shadow-lg overflow-hidden
                       ${isDarkMode ? 'bg-gradient-to-b from-gray-800 to-gray-700' : 'bg-gradient-to-b from-white to-gray-200'}`}>
         {/* Status Bar */}
-        <div className="w-full flex justify-between items-center mb-2 text-sm">
-          <span>{currentTime}</span>
-          <div className="flex items-center space-x-2">
-            <Wifi size={16} />
-            <Battery size={16} />
+        <div className="w-full flex justify-between items-center mb-4 text-sm font-medium">
+          <span className="bg-opacity-50 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full">{currentTime}</span>
+          <div className="flex items-center space-x-3">
+            <Wifi size={18} className="text-blue-500" />
+            <Battery size={18} className="text-green-500" />
           </div>
         </div>
 
         {/* Logo */}
-        <h1 className="text-2xl font-bold mb-4">FU24</h1>
+        <h1 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">FU24</h1>
 
         {/* Video Feed */}
-        <div className="content relative w-full h-full mb-4 rounded-2xl overflow-hidden
-                        border-4 border-opacity-50 border-white">
-          <video 
-            autoPlay 
-            playsInline 
-            muted 
-            ref={videoRef} 
-            className="relative w-full h-full object-cover" 
-          />
-          <canvas 
-            className="absolute top-0 left-0 w-full h-full z-10" 
-            ref={canvasRef}
-          ></canvas>
-          
-          {/* Pulsing animation when recording */}
+        <div className="relative  mb-6 rounded-2xl overflow-hidden
+                        border-4 border-opacity-50 border-white shadow-inner">
+
+          <video autoPlay playsInline muted ref={videoRef} className="relative w-full h-full rounded-md object-cover max-w-[640px] max-h-[640px]" id="frame" />
+          <canvas className="absolute top-0 left-0 w-full h-full z-99999 max-w-[640px] max-h-[640px]" ref={canvasRef}></canvas>
+
+          {/* Recording Indicator */}
           {isRecording && (
-            <div className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+            <div className="absolute top-3 right-3 flex items-center space-x-2 bg-black bg-opacity-50 px-3 py-1 rounded-full">
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              <span className="text-xs font-medium text-white">REC</span>
+            </div>
           )}
         </div>
 
-        {/* Control Button */}
-        <Button 
-          className={`w-16 h-16 rounded-full transition-colors duration-300 
-                      ${isRecording ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'}`}
-          onClick={toggleRecording}
-        >
-          {isRecording ? '■' : '●'}
-        </Button>
+        {/* Control Buttons */}
+        <div className="flex items-center space-x-6">
+          <Button 
+            className={`w-16 h-16 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105
+                        ${isRecording ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'}`}
+            onClick={toggleRecording}
+          >
+            <Camera size={24} className="text-white" />
+          </Button>
 
-        {/* Theme Toggle */}
-        <Button 
-          className="absolute top-4 right-4 p-2 rounded-full"
-          onClick={toggleTheme}
-        >
-          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-        </Button>
+          <Button 
+            className={`p-3 rounded-full transition-colors duration-300 shadow-md
+                        ${isDarkMode ? 'bg-yellow-400 text-gray-900' : 'bg-gray-700 text-white'}`}
+            onClick={toggleTheme}
+          >
+            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+          </Button>
 
-        {/* Settings Button */}
-        <Button 
-          className="absolute bottom-4 right-4 p-2 rounded-full"
-        >
-          <Settings size={20} />
-        </Button>
+          <Button 
+            className="p-3 rounded-full bg-gray-200 dark:bg-gray-700 shadow-md transition-all duration-300 hover:rotate-90"
+          >
+            <Settings size={20} className="text-gray-600 dark:text-gray-300" />
+          </Button>
+        </div>
       </div>
     </main>
   );
