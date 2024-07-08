@@ -5,41 +5,38 @@
   justify-content: center;
   position: fixed;
   inset: 0;
-  background-image: linear-gradient(to right bottom, #321d7e, #400b52, #360730, #230717, #000000);
+  background: rgba(34, 34, 34, 1);
   z-index: 50;
 }
 
 .loader {
   width: 60px;
   height: 25px;
-  border: 3px solid #ffffff;
-  box-sizing: border-box;
+  border: 2px solid #82d5f0;
   border-radius: 50%;
   display: grid;
-  animation: l2 2s infinite linear;
+  animation: h2 2s infinite linear;
 }
-
 .loader:before,
 .loader:after {
-  content: "";
+  content:"";
   grid-area: 1/1;
-  border: inherit;
+  border:inherit;
   border-radius: 50%;
   animation: inherit;
   animation-duration: 3s;
 }
-
 .loader:after {
   --s:-1;
 }
 
-@keyframes l2 {
+@keyframes h2 {
    100% {transform:rotate(calc(var(--s,1)*1turn))}
 }
 
 .loader-text {
   color: white;
-  margin-top: 20px;
+  margin-top: 30px;
   font-size: 18px;
   font-weight: 500;
 }

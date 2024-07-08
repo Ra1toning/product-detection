@@ -33,11 +33,21 @@ function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius, rotation) {
   }
   ctx.lineTo(cx, cy - outerRadius);
   ctx.closePath();
-  ctx.fillStyle = 'yellow';
+
+  // Create gradient
+  const gradient = ctx.createRadialGradient(cx, cy, innerRadius, cx, cy, outerRadius);
+  gradient.addColorStop(0, 'yellow');
+  gradient.addColorStop(1, 'orange');
+  ctx.fillStyle = gradient;
   ctx.fill();
+
+  // Add glow effect
+  ctx.shadowColor = 'rgba(255, 165, 0, 0.5)';
+  ctx.shadowBlur = 20;
   ctx.strokeStyle = 'orange';
   ctx.lineWidth = 2;
   ctx.stroke();
+  ctx.shadowBlur = 0; // Reset shadow blur to default
 }
 
 function drawSparkles(ctx, cx, cy, count, radius) {
@@ -46,10 +56,16 @@ function drawSparkles(ctx, cx, cy, count, radius) {
     const distance = Math.random() * radius;
     const x = cx + distance * Math.cos(angle);
     const y = cy + distance * Math.sin(angle);
+
     ctx.beginPath();
     ctx.arc(x, y, 2, 0, 2 * Math.PI);
-    ctx.fillStyle = 'white';
+
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, 2);
+    gradient.addColorStop(0, 'white');
+    gradient.addColorStop(1, 'transparent');
+    ctx.fillStyle = gradient;
     ctx.fill();
+
     ctx.strokeStyle = 'yellow';
     ctx.lineWidth = 1;
     ctx.stroke();
@@ -132,21 +148,6 @@ export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, class
 
         ctx.fillStyle = "#ffffff";
         ctx.fillText(labelText, x1 - 1, y1 - (textHeight + 2));
-
-        // Draw keypoints
-        const keypoints = keypoints_data[i];
-        ctx.fillStyle = 'blue';
-        for (let j = 0; j < keypoints.length; j += 3) {
-          const keypointX = keypoints[j] * scale + padX;
-          const keypointY = keypoints[j + 1] + padY;
-          const keypointConfidence = keypoints[j + 2];
-          
-          if (keypointConfidence > 0.5) { 
-            ctx.beginPath();
-            ctx.arc(keypointX, keypointY, 3, 0, 2 * Math.PI);
-            ctx.fill();
-          }
-        }
       }
     }
 
