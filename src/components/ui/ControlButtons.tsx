@@ -11,13 +11,6 @@ interface ControlButtonsProps {
 export default function ControlButtons({ isRecording, isDarkMode, toggleRecording, toggleTheme }: ControlButtonsProps) {
   return (
     <div className="flex items-center space-x-6">
-      <Button
-        className={`w-16 h-16 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105
-                    ${isRecording ? 'bg-red-500 hover:bg-red-600' : 'bg-cyan-500 hover:bg-cyan-600'}`}
-        onClick={toggleRecording}
-      >
-        <Camera size={24} className="text-white" />
-      </Button>
 
       <Button
         className={`p-3 rounded-full transition-colors duration-300 shadow-md
@@ -25,6 +18,14 @@ export default function ControlButtons({ isRecording, isDarkMode, toggleRecordin
         onClick={toggleTheme}
       >
         {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+      </Button>
+
+      <Button
+        className={`w-16 h-16 rounded-full transition-all duration-300 shadow-lg transform hover:scale-105
+                    ${isRecording ? 'bg-red-500 hover:bg-red-600' : 'bg-cyan-500 hover:bg-cyan-600'}`}
+        onClick={toggleRecording}
+      >
+        <Camera size={24} className="text-white" />
       </Button>
 
       <Button
