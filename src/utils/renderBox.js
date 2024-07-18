@@ -30,6 +30,7 @@ export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, class
   if (!canvasRef || !canvasRef.current) {
     return;
   }
+  console.log(classes_data);
   const ctx = canvasRef.current.getContext("2d");
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -104,6 +105,28 @@ export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, class
       // Draw label text
       ctx.fillStyle = "#ffffff";
       ctx.fillText(labelText, x1, y1 - (textHeight + labelPadding));
+
+      // Render keypoints
+      if (keypoints_data && keypoints_data[i]) {
+        const keypoints = keypoints_data[i];
+        for (let j = 0; j < keypoints.length; j += 3) {
+          const x = keypoints[j] * scale + padX;
+          const y = keypoints[j + 1] * scale + padY;
+          const score = keypoints[j + 2];
+
+          if (score) {
+            // Draw keypoint
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.8)';
+            ctx.fill();
+
+            // Draw keypoint label
+            ctx.fillStyle = 'white';
+            ctx.fillText(`${j / 3}`, x + 5, y - 5);
+          }
+        }
+      }
     }
   }
 }

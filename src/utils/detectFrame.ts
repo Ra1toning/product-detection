@@ -2,6 +2,8 @@ import { preprocessImage } from './preprocessImage';
 import { non_max_suppression } from './nonMaxSuppression';
 import { renderBoxes } from './renderBox';
 import * as ort from 'onnxruntime-web';
+import labels from "./labels.json";
+import { getProductName } from '@/utils/productMapping';
 
 export const detectFrame = async (session: any, videoRef: React.RefObject<HTMLVideoElement>, canvasRef: React.RefObject<HTMLCanvasElement>, threshold: number) => {
   const modelDim = [640, 640];
@@ -37,5 +39,15 @@ export const detectFrame = async (session: any, videoRef: React.RefObject<HTMLVi
 
   renderBoxes(canvasRef, threshold, boxes, scores, classDetect, keypoints, modelDim[0], modelDim[1], videoElement.videoWidth, videoElement.videoHeight);
 
-  requestAnimationFrame(() => detectFrame(session, videoRef, canvasRef, threshold));
+  if (detections.length > 0) {
+    const bestDetection = detections[0]; 
+    return {
+      class: getProductName(bestDetection.klass.toString()),
+      score: bestDetection.score,
+      box: bestDetection.box,
+      keypoints: bestDetection.keypoints
+    };
+  }
+
+  return null;
 };
