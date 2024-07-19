@@ -25,27 +25,27 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
   ctx.quadraticCurveTo(x, y, x + radius, y);
   ctx.closePath();
 }
-
 export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, classes_data, keypoints_data, modelWidth, modelHeight, videoWidth, videoHeight) {
   if (!canvasRef || !canvasRef.current) {
     return;
   }
+
   const ctx = canvasRef.current.getContext("2d");
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  const canvasWidth = ctx.canvas.width;
+  const canvasHeight = ctx.canvas.height;
+
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
   const font = "16px 'Segoe UI', Roboto, Arial, sans-serif";
   ctx.font = font;
   ctx.textBaseline = "top";
-
-  const canvasWidth = ctx.canvas.width;
-  const canvasHeight = ctx.canvas.height;
 
   const scaleX = canvasWidth / modelWidth;
   const scaleY = canvasHeight / modelHeight;
   const scale = Math.min(scaleX, scaleY);
 
   const padX = (canvasWidth - modelWidth * scale) / 2;
-  const padY = (canvasHeight - modelHeight * scale) / 2;
+  const padY = (canvasHeight - modelHeight) / 2;
 
   for (let i = 0; i < scores_data.length; ++i) {
     if (scores_data[i] > threshold) {
@@ -58,10 +58,11 @@ export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, class
 
       let [x1, y1, x2, y2] = normalizeCoordinates(boxes_data[i], modelWidth, modelHeight);
 
+      // Convert coordinates to canvas dimensions
       x1 = x1 * scale + padX;
-      y1 = y1 * scale + padY;
+      y1 = y1 + padY;
       x2 = x2 * scale + padX;
-      y2 = y2 * scale + padY;
+      y2 = y2 + padY;
 
       const width = x2 - x1;
       const height = y2 - y1;
@@ -104,6 +105,28 @@ export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, class
       // Draw label text
       ctx.fillStyle = "#ffffff";
       ctx.fillText(labelText, x1, y1 - (textHeight + labelPadding));
+
+      // Render keypoints
+      if (keypoints_data && keypoints_data[i]) {
+        const keypoints = keypoints_data[i];
+        for (let j = 0; j < keypoints.length; j += 3) {
+          const x = keypoints[j] * scale + padX;
+          const y = keypoints[j + 1] + padY;
+          const score = keypoints[j + 2];
+
+          if (score) {
+            // Draw keypoint
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.8)';
+            ctx.fill();
+
+            // Draw keypoint label
+            ctx.fillStyle = 'white';
+            ctx.fillText(`${j / 3}`, x + 5, y - 5);
+          }
+        }
+      }
     }
   }
 }

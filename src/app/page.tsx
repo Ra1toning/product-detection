@@ -6,6 +6,9 @@ import { Bebas_Neue } from 'next/font/google';
 import StatusBar from "@/components/ui/StatusBar";
 import VideoFeed from "@/components/ui/VideoFeed";
 import ControlButtons from "@/components/ui/ControlButtons";
+import ProductDetails from "@/components/ui/ProductDetails";
+import SettingsModal from "@/components/ui/SettingsModal";
+import { getProductName } from '@/utils/productMapping';
 
 const poppins = Bebas_Neue({ weight: '400', subsets: ['latin'] });
 
@@ -18,8 +21,17 @@ export default function Home() {
   const webcam = new Webcam();
 
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
   const [currentTime, setCurrentTime] = useState("00:00");
+  const [showProductDetails, setShowProductDetails] = useState(false);
+  const [detectedProduct, setDetectedProduct] = useState<null | { 
+    name: string; 
+    score: number; 
+    box: number[]; 
+    keypoints: number[] 
+  }>(null);
+  const [lotteryNumbers, setLotteryNumbers] = useState<string[]>([]);
+  const [currentLotteryNumber, setCurrentLotteryNumber] = useState<string | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -78,9 +90,24 @@ export default function Home() {
 
     const loadModel = async () => {
       try {
-        const session = await ort.InferenceSession.create('/models/best.onnx');
+        const session = await ort.InferenceSession.create('/models/new-best.onnx');
 
-        webcam.open(videoRef, () => detectFrame(session, videoRef, canvasRef, threshold));
+        const detectFrameWrapper = async () => {
+          const result = await detectFrame(session, videoRef, canvasRef, threshold);
+          if (result && result.score > threshold) {
+            setDetectedProduct({ 
+              name: result.class, 
+              score: result.score, 
+              box: result.box, 
+              keypoints: result.keypoints.flat() 
+            });
+          } else {
+            setDetectedProduct(null);
+          }
+          requestAnimationFrame(detectFrameWrapper);
+        };
+
+        webcam.open(videoRef, detectFrameWrapper);
 
         const videoElement = videoRef.current;
         const canvasElement = canvasRef.current;
@@ -108,9 +135,32 @@ export default function Home() {
   }, []);
 
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
-  const toggleRecording = () => setIsRecording(!isRecording);
 
-  console.warn = () => {};
+  const handleCameraClick = () => {
+    if (detectedProduct && detectedProduct.score > threshold) {
+      const newLotteryNumber = Math.floor(10000000 + Math.random() * 90000000).toString();
+      setCurrentLotteryNumber(newLotteryNumber);
+      setLotteryNumbers(prev => [...prev, newLotteryNumber]);
+      setShowProductDetails(true);
+    }
+  };
+
+  const handleCloseProductDetails = () => {
+    setShowProductDetails(false);
+    setCurrentLotteryNumber(null);
+  };
+
+  const handleSettingsClick = () => {
+    setShowSettings(true);
+  };
+
+  const handleCloseSettings = () => {
+    setShowSettings(false);
+  };
+
+  const handleDeleteLotteryNumber = (numberToDelete: string) => {
+    setLotteryNumbers(prevNumbers => prevNumbers.filter(number => number !== numberToDelete));
+  };
 
   return (
     <main className={`${poppins.className} flex min-h-screen flex-col items-center justify-center p-4 ${isDarkMode ? 'bg-gradient-to-br from-gray-600 to-black text-white' : ' bg-gradient-to-tl from-cyan-500 to-white'}`}>
@@ -126,15 +176,35 @@ export default function Home() {
           loading={loading}
           videoRef={videoRef}
           canvasRef={canvasRef}
-          isRecording={isRecording}
+          detectedProduct={detectedProduct}
         />
         
         <ControlButtons
-          isRecording={isRecording}
           isDarkMode={isDarkMode}
-          toggleRecording={toggleRecording}
           toggleTheme={toggleTheme}
+          onCameraClick={handleCameraClick}
+          onSettingsClick={handleSettingsClick}
         />
+
+        {showProductDetails && detectedProduct && currentLotteryNumber && (
+          <ProductDetails
+            product={{
+              name: getProductName(detectedProduct.name),
+              score: detectedProduct.score,
+              details: getProductName(detectedProduct.name)
+            }}
+            lotteryNumber={currentLotteryNumber}
+            onClose={handleCloseProductDetails}
+          />
+        )}
+
+        {showSettings && (
+          <SettingsModal
+            lotteryNumbers={lotteryNumbers}
+            onClose={handleCloseSettings}
+            onDelete={handleDeleteLotteryNumber}
+          />
+        )}
       </div>
     </main>
   );
