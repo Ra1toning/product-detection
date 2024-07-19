@@ -29,11 +29,7 @@ export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, class
   if (!canvasRef || !canvasRef.current) {
     return;
   }
-<<<<<<< HEAD
 
-=======
-  console.log(classes_data);
->>>>>>> a803f28de3fb320f0e348888daf6d2125101fc22
   const ctx = canvasRef.current.getContext("2d");
   const canvasWidth = ctx.canvas.width;
   const canvasHeight = ctx.canvas.height;
@@ -115,11 +111,7 @@ export function renderBoxes(canvasRef, threshold, boxes_data, scores_data, class
         const keypoints = keypoints_data[i];
         for (let j = 0; j < keypoints.length; j += 3) {
           const x = keypoints[j] * scale + padX;
-<<<<<<< HEAD
           const y = keypoints[j + 1] + padY;
-=======
-          const y = keypoints[j + 1] * scale + padY;
->>>>>>> a803f28de3fb320f0e348888daf6d2125101fc22
           const score = keypoints[j + 2];
 
           if (score) {
