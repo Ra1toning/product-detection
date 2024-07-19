@@ -27,7 +27,11 @@ export default function Home() {
     name: string; 
     score: number; 
     box: number[]; 
+<<<<<<< HEAD
     keypoints: number[] 
+=======
+    keypoints: [number, number][] 
+>>>>>>> a803f28de3fb320f0e348888daf6d2125101fc22
   }>(null);
   const [lotteryNumbers, setLotteryNumbers] = useState<string[]>([]);
   const [currentLotteryNumber, setCurrentLotteryNumber] = useState<string | null>(null);
@@ -99,7 +103,11 @@ export default function Home() {
               name: result.class, 
               score: result.score, 
               box: result.box, 
+<<<<<<< HEAD
               keypoints: result.keypoints.flat() 
+=======
+              keypoints: result.keypoints 
+>>>>>>> a803f28de3fb320f0e348888daf6d2125101fc22
             });
           } else {
             setDetectedProduct(null);
