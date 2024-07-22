@@ -1,29 +1,10 @@
 import { RefObject, useEffect, useState, useCallback } from "react";
-
-interface VideoFeedProps {
-  loading: boolean;
-  videoRef: RefObject<HTMLVideoElement>;
-  canvasRef: RefObject<HTMLCanvasElement>;
-  detectedProduct: { 
-    name: string; 
-    score: number; 
-    box: number[]; 
-    keypoints: number[] 
-  } | null;
-}
+import { VideoFeedProps } from "@/utils/types";
+import { calculateRotationAngle } from "@/utils/calculateAngle";
 
 export default function VideoFeed({ loading, videoRef, canvasRef, detectedProduct }: VideoFeedProps) {
   const [showReelVideo, setShowReelVideo] = useState(false);
   const [reelStyle, setReelStyle] = useState({});
-
-  const calculateRotationAngle = (keypoints: number[]): number => {
-    const x1 = keypoints[0];
-    const y1 = keypoints[1];
-    const x2 = keypoints[3];
-    const y2 = keypoints[4];
-    const angle = Math.atan2(y2 - y1, x2 - x1);
-    return angle * (180 / Math.PI);
-  };
 
   const updateReelStyle = useCallback(() => {
     if (detectedProduct && detectedProduct.score > 0.50 && detectedProduct.keypoints.length > 0) {
@@ -127,7 +108,6 @@ export default function VideoFeed({ loading, videoRef, canvasRef, detectedProduc
           autoPlay
           loop
           playsInline
-          muted
           src="/assets/reels1.mp4"
           style={reelStyle}
           onError={(e) => console.log(`Video error: ${e}`)}
