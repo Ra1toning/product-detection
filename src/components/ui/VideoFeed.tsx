@@ -35,9 +35,10 @@ export default function VideoFeed({ loading, videoRef, canvasRef, detectedProduc
       }
 
       const videoRect = videoElement.getBoundingClientRect();
+      const canvasRect = canvasElement.getBoundingClientRect();
 
-      const scaleX = videoRect.width / canvasElement.width;
-      const scaleY = videoRect.height / canvasElement.height;
+      const scaleX = canvasRect.width / 640;
+      const scaleY = canvasRect.height / 640;
 
       const processedKeypoints = [];
       for (let i = 0; i < detectedProduct.keypoints.length; i += 3) {
@@ -67,7 +68,7 @@ export default function VideoFeed({ loading, videoRef, canvasRef, detectedProduc
         top: `${(centerY / videoRect.height) * 100}%`,
         width: `${(width / videoRect.width) * 100}%`,
         height: `${(height / videoRect.height) * 100}%`,
-        zIndex: 1000000,
+        zIndex: 30,
         objectFit: 'cover' as const,
         clipPath: `polygon(${processedKeypoints.map(([x, y]) => 
           `${((x - minX) / width) * 100}% ${((y - minY) / height) * 100}%`
